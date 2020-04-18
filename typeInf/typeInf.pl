@@ -1,3 +1,5 @@
+:- dynamic gvar/2.
+
 /* match functions by unifying with arguments 
     and infering the result
 */

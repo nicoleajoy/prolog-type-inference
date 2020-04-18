@@ -2,14 +2,18 @@ Introduction
 ============
 
 The goal of this assignment is to write a type inference
-algorithm similar (but simpler) than the one in OCaml in SWI prolog.
+algorithm similar (but simpler) than the one in OCaml/Haskell in SWI prolog.
 In particular, your program will figure out the types of inputs
 and outputs of functions and type of variables used much like
-OCaml inferes the types when it compiles code.
+OCaml/Haskell inferes the types when it compiles code.
 
 For exmple, OCaml will infer the fact that the function
 let add x y = x + y;
 has the type add: int->int->int (i.e. takes pairs of ints into int)
+
+And haskell will do the same
+add x y =  x + y 
+has the type add :: Integer -> Integer -> Integer
 
 The specific mechanism used in OCaml to implement type inference
 is called Unification 
@@ -22,23 +26,23 @@ What to implement
 
 The provided code already implements significant part of the 
 type inference mechanism. You need to complete it to allow
-a more complete coverage of OCAml type inference. Specifically:
+a more complete coverage of OCAml OR Haskell type inference. Specifically:
 
 1. Add more basic functions to provide interesting code (fType predicate)
 2. Add more statement types. At a minimum you need to cover:
-    a. global variables with expression initialization  (e.g. let x = 3)
+    a. global variables with expression initialization  (e.g. let x = 3 (OCaml), x = 3 (Haskell))
     b. global function definitions (let add x y = x+y)
         last expression is an implicit return. return statement also possible
     c. expression computation (as a statement)
     d. if statements
     e. "let in" statement for local variables
-    f. for statements
-    g. code blocks (separated by ;)
+    f. "for" statements in OCaml OR "where" statements in Haskell
+    g. code blocks (sets of statements that can be run together and return the type of the last statement)
 3. Write tests for all predicates especially infer (at least 20 cases).
 
-You need to find your own representation of OCaml code to implement the 
+You need to find your own representation of OCaml/Haskell code to implement the 
 above and to write your tests accordingly. Keep in mind that only type inference 
-matters so any constants in the corresponding OCaml code become basic 
+matters so any constants in the corresponding code become basic 
 types. For example "let v = 3" gets translated as "gvLet(v, T, int)" since 
 3->int and we do not care about values, only types. 
 
