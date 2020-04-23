@@ -9,6 +9,7 @@ typeExp(X, float) :-
 typeExp(X, bool) :-
     typeBoolExp(X).
 
+
 /* match functions by unifying with arguments 
     and infering the result
 */
@@ -68,6 +69,51 @@ typeBoolExp( X < Y) :-
     typeExp(Y, T),
     hasComparison(T).
 
+% typeBoolExp(true).
+% typeBoolExp(false). 
+% typeBoolExp( X > Y) :- 
+%     typeExp(X, T),
+%     typeExp(Y, T),
+%     hasComparison(T).
+
+% typeBoolExp(true).
+% typeBoolExp(false). 
+% typeBoolExp( X == Y) :- 
+%     typeExp(X, T),
+%     typeExp(Y, T),
+%     hasComparison(T).
+
+% typeBoolExp(true).
+% typeBoolExp(false). 
+% typeBoolExp( X != Y) :- 
+%     typeExp(X, T),
+%     typeExp(Y, T),
+%     hasComparison(T).
+
+% Sum Types
+% typeSums :: X -> int 
+% typeSums :: X -> float
+typeSums(X,Y,T) :-
+    typeSum(Y,T),
+    asserta(gvar(X,T)).
+    % typeExp(X,T),
+    % typeExp(Y,T).
+
+% typeSum(_X,_Y,_T).
+typeSum(X, Y) :-
+    not(X=Y).
+    
+    % asserta(gvar(X,T)),
+    % hasComparison(T).
+
+% Tuple Types
+% typeTuple(tuple(X,Y),(T, R)):-
+typeTuple(tuple(X,Y,Z),T, R, S):-
+    typeExp(X,T),
+    typeExp(Y,R),
+    typeExp(Z,S),
+    asserta(gvar(X,T)).
+
 
 /* TODO: add statements types and their type checking */
 
@@ -83,6 +129,27 @@ typeStatement(gvLet(Name, T, Code), unit):-
     typeExp(Code, T), /* infer the type of Code and ensure it is T */
     bType(T), /* make sure we have an infered type */
     asserta(gvar(Name, T)). /* add definition to database */
+
+% for statements Haskell
+typeStatement(where(Name, Cond, Code), T):-
+    typeBoolExp(Cond),
+    atom(Name), /* make sure we have a bound name */
+    typeExp(Code, T), /* infer the type of Code and ensure it is T */
+    asserta(gvar(Code, T)). /* add definition to database */
+
+% code blocks
+
+    % typeCode(Code, T),
+    %typeExp(X, T).
+    % asserta(gvar(Code)).
+    % typeExp(Code, (;)), /* infer the type of Code and ensure it is T */
+    
+% Sum Types 
+
+
+
+
+
 
 /* if statements are encodes as:
     if(condition:Boolean, trueCode: [Statements], falseCode: [Statements])
@@ -204,7 +271,7 @@ fType(print, [_X, unit]). /* simple print */
 fType(iequal, [int,int,int]).
 fType((==), [T, T, T]) :- hasEqual(T).
 fType(fequal, [float, float, float]).
-fType(fequal, [string, string, string]).
+fType(sequal, [string, string, string]).
 fType(fToInt, [float,int]).
 fType(iToFloat, [int,float]).
 fType(print, [_X, unit]). /* simple print */
@@ -213,7 +280,7 @@ fType(print, [_X, unit]). /* simple print */
 fType(inequal, [int,int,int]).
 fType((==), [T, T, T]) :- hasNE(T).
 fType(fnequal, [float, float, float]).
-fType(fnequal, [string, string, string]).
+fType(snequal, [string, string, string]).
 fType(fToInt, [float,int]).
 fType(iToFloat, [int,float]).
 fType(print, [_X, unit]). /* simple print */

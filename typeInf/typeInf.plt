@@ -41,4 +41,22 @@ test(mockedFct, [nondet]) :-
     typeExp(my_fct(X), T), % infer type of expression using or function
     assertion(X==int), assertion(T==float). % make sure the types infered are correct
 
+% Test 1
+test(simple_if, [nondet]) :-
+    typeStatement( if(true, [3], [4]), T),
+    assertion(T==int).
+
+% Test 2
+% test(simple_if, [nondet]) :-
+%     infer([
+%     if(<(float,float), [iplus(int,int)], [iminus(int,int)])
+%     ], Ret),
+%     assertion(Ret==int).
+
+% Test 2
+test(where_test, [nondet]) :-
+    typeStatement(where(unit, true, bool), T),
+    assertion(T==bool).
+
+
 :-end_tests(typeInf).
