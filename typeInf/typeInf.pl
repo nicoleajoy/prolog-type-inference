@@ -67,37 +67,23 @@ typeBoolExp(false).
 typeBoolExp( X < Y) :- 
     typeExp(X, T),
     typeExp(Y, T),
-    hasComparison(T).
+    hasComparison(T),
+    hasLT(X, T),
+    hasLT(Y, T).
 
-% typeBoolExp(true).
-% typeBoolExp(false). 
-% typeBoolExp( X > Y) :- 
-%     typeExp(X, T),
-%     typeExp(Y, T),
-%     hasComparison(T).
+/* sum types
+    typeSums :: X -> int 
+    typeSums :: X -> float
+    correct
+    typeSums :: X -> int 
+    typeSums :: X -> int
+    Fail
 
-% typeBoolExp(true).
-% typeBoolExp(false). 
-% typeBoolExp( X == Y) :- 
-%     typeExp(X, T),
-%     typeExp(Y, T),
-%     hasComparison(T).
-
-% typeBoolExp(true).
-% typeBoolExp(false). 
-% typeBoolExp( X != Y) :- 
-%     typeExp(X, T),
-%     typeExp(Y, T),
-%     hasComparison(T).
-
-% Sum Types
-% typeSums :: X -> int 
-% typeSums :: X -> float
-typeSums(X,Y,T) :-
-    typeSum(Y,T),
-    asserta(gvar(X,T)).
-    % typeExp(X,T),
-    % typeExp(Y,T).
+*/
+typeSums(X, Y, T) :-
+    typeSum(Y, T),
+    asserta(gvar(X, T)).
+    
 
 % typeSum(_X,_Y,_T).
 typeSum(X, Y) :-
@@ -114,6 +100,12 @@ typeTuple(tuple(X,Y,Z),T, R, S):-
     typeExp(Z,S),
     asserta(gvar(X,T)).
 
+/* tuple types*/
+typeTuple(tuple(X, Y, Z), T, R, S):-
+    typeExp(X, T),
+    typeExp(Y, R),
+    typeExp(Z, S),
+    asserta(gvar(X, T)).
 
 /* TODO: add statements types and their type checking */
 
@@ -159,6 +151,13 @@ typeStatement(if(Cond, TrueB, FalseB), T) :-
     typeCode(TrueB, T),
     typeCode(FalseB, T).
 
+% for statements Haskell (where)
+typeStatement(where(Name, Cond, Code), T):-
+    typeBoolExp(Cond),
+    atom(Name), /* make sure we have a bound name */
+    typeExp(Code, T), /* infer the type of Code and ensure it is T */
+    asserta(gvar(Code, T)). /* add definition to database */
+
 /* Code is simply a list of statements. The type is 
     the type of the last statement 
 */
@@ -166,6 +165,15 @@ typeCode([S], T):-typeStatement(S, T).
 typeCode([S, S2|Code], T):-
     typeStatement(S,_T),
     typeCode([S2|Code], T).
+
+
+/* Code is simply a list of expressions. The type is 
+    the type of the last expression 
+*/
+typeCode([E], T):-typeExpList(E, T).
+typeCode([E, E2|Code], T):-
+    typeExpList(E,_T),
+    typeCode([E2|Code], T).
 
 /* top level function */
 infer(Code, T) :-

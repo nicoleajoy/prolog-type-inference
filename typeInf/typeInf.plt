@@ -47,16 +47,58 @@ test(simple_if, [nondet]) :-
     assertion(T==int).
 
 % Test 2
-% test(simple_if, [nondet]) :-
-%     infer([
-%     if(<(float,float), [iplus(int,int)], [iminus(int,int)])
-%     ], Ret),
-%     assertion(Ret==int).
-
-% Test 2
 test(where_test, [nondet]) :-
     typeStatement(where(unit, true, bool), T),
     assertion(T==bool).
 
+/*Tuple Types Test*/
+test(tup_test,[nondet]) :-
+    typeTuple(tuple(X,Y,Z), float,int,true),
+    assertion(X==float),
+    assertion(Y==int),
+    assertion(Z==true).
+
+/*Sum Types Test*/
+test(sum_test,[fail]) :-
+    typeSums(type, int, int),
+    assertion(type==int),
+    assertion(type==int).
+
+/* infer tests */
+test(infer_test1, [nondet]) :-
+    infer([iplus(int,int), bool], bool).
+
+test(infer_test2, [fail]) :-
+    infer([iplus(int, int)], float).
+
+test(infer_test3, [nondet]) :-
+    infer([fplus(float,float)], float).
+
+test(infer_test4, [fail]) :-
+    infer([fplus(float, float)], int).
+
+test(infer_test5, [nondet]) :-
+    infer([gvLet(u, T1, iplus(_, _)),
+           gvLet(v, T2, fplus(_, _)),
+           iplus(u, int),
+           fplus(v, float)], float),
+    assertion(T1==int),
+    assertion(T2==float).
+
+test(infer_test6, [nondet]) :-
+    infer([gvLet(u, T1, fplus(_, _)),
+           gvLet(v, T2, iplus(_, _)),
+           fplus(u, float),
+           iplus(v, int)], int),
+    assertion(T1==float),
+    assertion(T2==int).
+
+test(infer_test7, [fail]) :-
+    infer([gvLet(u, T1, iplus(_, _)),
+           gvLet(v, T2, fplus(_, _)),
+           fplus(u, int),
+           iplus(v, float)], float),
+    assertion(T1==int),
+    assertion(T2==memory_file_to_atom('Param1', 'Param2')).
 
 :-end_tests(typeInf).
