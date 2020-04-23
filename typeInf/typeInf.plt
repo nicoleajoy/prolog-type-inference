@@ -9,7 +9,6 @@
 */
 
 % tests for typeExp
-
 test(typeExp_iplus) :- 
     typeExp(iplus(int,int), int).
 
@@ -88,6 +87,19 @@ test(if_test, [nondet]) :-
 test(where_test, [nondet]) :-
     typeStatement(where(unit, true, bool), T),
     assertion(T==bool).
+
+/* test tuple types */
+test(tup_test,[nondet]) :-
+    typeTuple(tuple(X,Y,Z), float,int,true),
+    assertion(X==float),
+    assertion(Y==int),
+    assertion(Z==true).
+
+/* test sum types */
+test(sum_test,[fail]) :-
+    typeSums(type, int, int),
+    assertion(type==int),
+    assertion(type==int).
 
 /* infer tests */
 test(infer_test1, [nondet]) :-
