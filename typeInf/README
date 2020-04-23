@@ -3,20 +3,27 @@ The goal of this assignment is to write a type inference algorithm similar
 this program figures out the types of inputs and outputs of functions and 
 type of variables used much like OCaml/Haskell inferes types when it compiles code.
 
+Group
+=====
+
+Nicole Ajoy, Yvette Williamson
+
 What we implemented
 ===================
 
+(Hoping we did most of these correct!)
+
 1. Added more basic functions to provide interesting code (fType predicate)
 2. Added more statement types:
-    a. global variables with expression initialization  (e.g. let x = 3 (OCaml), x = 3 (Haskell))
-    b. global function definitions (let add x y = x+y)
+    a. global variables with expression initialization
+    b. global function definitions
         last expression is an implicit return. return statement also possible
     c. expression computation (as a statement)
     d. if statements
     e. "let in" statement for local variables
     f. "where" statements in Haskell
     g. code blocks
-3. 20+ tests for all predicates (especially infer)
+3. 20+ tests for all predicates
 4. Added sum types (bonus)
 5. Added tuple types (bonus)
 
@@ -33,3 +40,9 @@ Running unit tests
 
 A) Run all tests:
     ?- consult("typeInf.plt"), run_tests().
+
+Fin
+==================
+
+Thank you!
+- Nicole, Yvette
